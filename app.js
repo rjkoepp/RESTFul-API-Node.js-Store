@@ -6,7 +6,7 @@ const app = express();
 const productRoutes = require('./api/routes/products'); // takes to file !!!
 
 // anything starting with /products in the url is forward to products.js
-app.use('./products', productRoutes);
+app.use('/products', productRoutes);
 
 module.exports = app;
 
