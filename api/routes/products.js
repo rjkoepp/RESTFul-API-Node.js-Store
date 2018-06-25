@@ -14,7 +14,7 @@ router.get('/', (req, res, next) => {
 
 router.post('/', (req, res, next) => {
     // handle post requests here
-    res.status(200).json({
+    res.status(201).json({
         message: 'Handling POST requests to /products'
     });
 });
@@ -36,19 +36,18 @@ router.get('/:productID', (req, res, next) => {
 
 }); 
 
-router.get('/:productID', (req, res, next) => {
-
-    const id = req.params.productID;
-    if (id === 'special') {
-        res.status(200).json({
-            message: 'You discovered the special ID',
-            id: id
-        });
-    } else {
-        res.status(200).json({
-            message: 'You passed an ID'
-        });
-    }
-
+// only need to return a res.status if there is possible bleed thru
+router.patch('/:productID', (req, res, next) => {
+    res.status(200).json({
+        message: 'Updated product!'
+    });
 }); 
+
+router.delete('/:productID', (req, res, next) => {
+    res.status(200).json({
+        message: 'Deleted product!'
+    });
+}); 
+
+
 module.exports = router;

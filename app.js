@@ -4,9 +4,13 @@ const express = require('express');
 const app = express();
 
 const productRoutes = require('./api/routes/products'); // takes to file !!!
+const orderRoutes = require('./api/routes/orders');
 
 // anything starting with /products in the url is forward to products.js
 app.use('/products', productRoutes);
+
+app.use('/orders', orderRoutes);
+
 
 module.exports = app;
 
