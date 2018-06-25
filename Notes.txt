@@ -1,0 +1,4 @@
+Useful install to allow auto update of server per save:
+npm install --save-dev nodemon
+Just remember to add script: "start": "nodemon server.js"
+
