@@ -15,7 +15,9 @@
   "author": "Robert Chang Koepp",
   "license": "ISC",
   "dependencies": {
-    "express": "^4.16.3"
+    "body-parser": "^1.18.3",
+    "express": "^4.16.3",
+    "mongoose": "^5.1.7"
   },
   "devDependencies": {
     "morgan": "^1.9.0",

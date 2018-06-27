@@ -1,3 +1,6 @@
+AWS Integration: 
+https://www.youtube.com/watch?v=ubCNZRNjhyo
+
 Useful install to allow auto update of server per save:
 npm install --save-dev nodemon
 Just remember to add script: "start": "nodemon server.js"
@@ -6,7 +9,31 @@ logging package for node.js
 add const to app.js
 npm install --save-dev morgan 
 
+parse body of incoming requests, supports urls & json, no files
+npm install --save body-parser
+add to app.js
+
+CORS 
+Cross Origin Resource Sharing
+
+Using MongoDB Atlas
+- database as a server, hosted on AWS
+
+Going to use Mongoose, rather than directly MongoDB
+
+
 
 
 ////
 later add the initial steps with express!!!
+
+
+
+// request, response, next (function)--> passes request along 
+app.use((req, res, next) => { 
+    //sends json response with status code of 200
+     res.status(200).json({
+         // javascript object
+         message: 'It works!'
+     }); 
+ }); // 'use' sets up middle ware thru which incoming requests go thru
