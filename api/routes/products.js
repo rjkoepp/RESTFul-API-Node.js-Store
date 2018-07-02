@@ -10,9 +10,18 @@ const Product = require('../models/product');
 // second arg is "handler"
 router.get('/', (req, res, next) => {
     // handle get requests here
-    res.status(200).json({
-        message: 'Handling GET requests to /products'
-    });
+    Product.find() //with no arguments, will find all objects
+        .exec()
+        .then(docs => {
+            console.log(docs);
+            res.status(200).json(docs);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
 }); // anything that reaches this point, already has products 
 
 router.post('/', (req, res, next) => {
@@ -28,12 +37,16 @@ router.post('/', (req, res, next) => {
     // a promise 
     product.save().then(result => {
         console.log(result);
-    })
-        .catch(err => console.log(err)); // save is provided by mongoose to save to data base (used on mongoose models)
-
-    res.status(201).json({
-        message: 'Handling POST requests to /products',
-        createdProduct: product, // return
+        res.status(201).json({
+            message: 'Handling POST requests to /products',
+            createdProduct: result, // return
+        })
+            .catch(err => console.log(err => {
+                console.log(err);
+                res.status(500).json({
+                    error: err
+                });
+            })); // save is provided by mongoose to save to data base (used on mongoose models)
     });
 });
 
@@ -46,9 +59,14 @@ router.get('/:productId', (req, res, next) => {
     Product.findById(id)// prommise (runs async)
         .exec()
         .then(doc => {
-            console.log(doc); // doc refers to fetched document from database
+            console.log("From database ", doc); // doc refers to fetched document from database
             // bc async and we want it to run after we know the method is done, we call in here
-            res.status(200).json(doc);
+            if (doc) {
+                res.status(200).json(doc);
+            } else {
+                res.status(400).json({ message: 'No valid entry found for provided id' });
+            }
+
         })
         .catch(err => {
             console.log(err);
@@ -84,9 +102,22 @@ router.patch('/:productID', (req, res, next) => {
 });
 
 router.delete('/:productID', (req, res, next) => {
-    res.status(200).json({
-        message: 'Deleted product!'
-    });
+    const id = req.params.productId;
+
+    Product.findOneAndRemove(id) // remove any products with this id
+        .exec() // "gets real promise?"
+        .then(result => {
+            if (result === null) {
+                console.log("the product is null");
+            }
+            res.status(200).json(result);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
 });
 
 

@@ -9,7 +9,13 @@ const mongoose = require('mongoose');
 const productRoutes = require('./api/routes/products'); // takes to file !!!
 const orderRoutes = require('./api/routes/orders');
 
-mongoose.connect('mongodb+srv://node-shop:' + process.env.MONGO_ATLAS_PW + '@node-rest-shop-1oq28.mongodb.net/test?retryWrites=true', );
+mongoose.connect('mongodb+srv://node-shop:' + process.env.MONGO_ATLAS_PW + '@node-rest-shop-1oq28.mongodb.net/test?retryWrites=true', (err) => {
+    if (err) {
+        console.log("Could not connect to MongoDB (DATA CENTER) ");
+    } else {
+        console.log("DATA CENTER - Connected")
+    }
+}); // CONNECTING TO MONGODB v. 3.6);
 
 app.use(morgan('dev')); // logger middle ware (dev is form we want output)
 app.use(bodyParser.urlencoded({ extended: false })); // body parser middle ware
@@ -55,5 +61,3 @@ app.use((error, req, res, next) => {
 });
 
 module.exports = app;
-
-
