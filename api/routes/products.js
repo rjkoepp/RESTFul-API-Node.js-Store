@@ -55,7 +55,6 @@ router.post('/', (req, res, next) => {
 router.get('/:productId', (req, res, next) => {
 
     const id = req.params.productId;
-    console.log('Entered the get');
     Product.findById(id)// prommise (runs async)
         .exec()
         .then(doc => {
@@ -70,35 +69,34 @@ router.get('/:productId', (req, res, next) => {
         })
         .catch(err => {
             console.log(err);
-            res.status(500).json({ error: err });
+            res.status(500).json({
+                error: err
+            });
         });
     // want to send response after we got data
 
 });
 
-/*
-router.get('/:productID', (req, res, next) => {
-
-    const id = req.params.productID;
-    if (id === 'special') {
-        res.status(200).json({
-            message: 'You discovered the special ID',
-            id: id
-        });
-    } else {
-        res.status(200).json({
-            message: 'You passed an ID'
-        });
-    }
-
-});
-*/
-
 // only need to return a res.status if there is possible bleed thru
-router.patch('/:productID', (req, res, next) => {
-    res.status(200).json({
-        message: 'Updated product!'
-    });
+
+router.patch("/:productId", (req, res, next) => {
+    const id = req.params.productId;
+    const updateOps = {};
+    for (const ops of req.body) {
+        updateOps[ops.propName] = ops.value; // allows for diff types of patch requests
+    }
+    Product.update({ _id: id }, { $set: updateOps }) // $set, compare key value pairs and how to update
+        .exec()
+        .then(result => {
+            console.log(result);
+            res.status(200).json(result);
+        })
+        .catch(err => {
+            console.log(err);
+            res.status(500).json({
+                error: err
+            });
+        });
 });
 
 router.delete('/:productID', (req, res, next) => {

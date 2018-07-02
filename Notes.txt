@@ -31,6 +31,26 @@ later add the initial steps with express!!!
 
 
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 // request, response, next (function)--> passes request along 
 app.use((req, res, next) => { 
     //sends json response with status code of 200
