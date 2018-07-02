@@ -1,6 +1,8 @@
 AWS Integration: 
 https://www.youtube.com/watch?v=ubCNZRNjhyo
 
+18:47, video 6
+
 Useful install to allow auto update of server per save:
 npm install --save-dev nodemon
 Just remember to add script: "start": "nodemon server.js"
@@ -37,3 +39,22 @@ app.use((req, res, next) => {
          message: 'It works!'
      }); 
  }); // 'use' sets up middle ware thru which incoming requests go thru
+
+ Original products get dummy code:
+ 
+ // : is a var
+router.get('/:productID', (req, res, next) => {
+
+    const id = req.params.productID;
+    if (id === 'special') {
+        res.status(200).json({
+            message: 'You discovered the special ID',
+            id: id
+        });
+    } else {
+        res.status(200).json({
+            message: 'You passed an ID'
+        });
+    }
+
+}); 

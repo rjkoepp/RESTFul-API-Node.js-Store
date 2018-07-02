@@ -3,23 +3,16 @@
 const express = require('express');
 const app = express();
 const morgan = require('morgan'); // funnel all requests thru morgan, log requests
-const bodyParser = require('body-parser'); 
+const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 
 const productRoutes = require('./api/routes/products'); // takes to file !!!
 const orderRoutes = require('./api/routes/orders');
 
-mongoose.connect(
-    'mongodb+srv://node-shop:' + 
-    process.env.MONGO_ATLAS_PW + 
-    '@node-rest-shop-1oq28.mongodb.net/test?retryWrites=true', 
-    {
-        useMongoClient: true
-    }
-);
+mongoose.connect('mongodb+srv://node-shop:' + process.env.MONGO_ATLAS_PW + '@node-rest-shop-1oq28.mongodb.net/test?retryWrites=true', );
 
 app.use(morgan('dev')); // logger middle ware (dev is form we want output)
-app.use(bodyParser.urlencoded({extended: false})); // body parser middle ware
+app.use(bodyParser.urlencoded({ extended: false })); // body parser middle ware
 app.use(bodyParser.json()); // extracts json data
 
 // below prevents CORS Errors (won't encounter through Postman)
@@ -27,8 +20,8 @@ app.use((req, res, next) => {
 
     res.header('Access-Control-Allow-Origin', '*'); // * is what client gets access
     res.header(
-    'Access-Control-Allow-Headers', 
-    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+        'Access-Control-Allow-Headers',
+        'Origin, X-Requested-With, Content-Type, Accept, Authorization'
     );
     if (req.method === 'OPTIONS') {
         // brower always sends OPTIONS with a post or put request
@@ -52,14 +45,14 @@ app.use((req, res, next) => {
 }); // 'use' sets up middle ware thru which incoming requests go thru
 
 // handles all errors thrown from anywhere in application
-app.use((error, req, res, next ) => {
+app.use((error, req, res, next) => {
     res.status(error.status || 500);
-    res.json ({
+    res.json({
         error: {
             message: error.message
         }
     });
-}); 
+});
 
 module.exports = app;
 
