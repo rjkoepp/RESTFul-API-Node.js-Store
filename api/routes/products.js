@@ -11,10 +11,24 @@ const Product = require('../models/product');
 router.get('/', (req, res, next) => {
     // handle get requests here
     Product.find() //with no arguments, will find all objects
+        .select('name price _id') // fields to be fetched
         .exec()
         .then(docs => {
-            console.log(docs);
-            res.status(200).json(docs);
+            const response = { // larger scope of data
+                count: docs.length,
+                products: docs.map(docs => {
+                    return { // could use spread, this is manual
+                        name: docs.name,
+                        price: docs.price,
+                        _id: docs._id,
+                        request: { // how to get more info
+                            type: 'GET',
+                            url: 'http://localhost:3000/products/' + docs._id
+                        }
+                    }
+                }) // map to new aray // contains docs (the product information);
+            };
+            res.status(200).json(response);
         })
         .catch(err => {
             console.log(err);
