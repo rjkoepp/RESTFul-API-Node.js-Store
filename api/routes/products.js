@@ -11,7 +11,7 @@ const Product = require('../models/product');
 router.get('/', (req, res, next) => {
     // handle get requests here
     Product.find() //with no arguments, will find all objects
-        .select('name price _id') // fields to be fetched
+        .select('name price _id') // fields to be fetched, could also use "select(-__v)", minus will exclude __v
         .exec()
         .then(docs => {
             const response = { // larger scope of data
@@ -23,6 +23,7 @@ router.get('/', (req, res, next) => {
                         _id: docs._id,
                         request: { // how to get more info
                             type: 'GET',
+                            description: "Get's all products",
                             url: 'http://localhost:3000/products/' + docs._id
                         }
                     }
@@ -52,8 +53,17 @@ router.post('/', (req, res, next) => {
     product.save().then(result => {
         console.log(result);
         res.status(201).json({
-            message: 'Handling POST requests to /products',
-            createdProduct: result, // return
+            message: 'Creating product successfully',
+            createdProduct: {
+                name: result.name,
+                price: result.price,
+                _id: result._id,
+                request: {
+                    type: 'GET', // subsequent request for more info
+                    url: 'http://localhost:3000/products/' + result._id
+                }
+            }
+
         })
             .catch(err => console.log(err => {
                 console.log(err);
@@ -93,17 +103,39 @@ router.get('/:productId', (req, res, next) => {
 
 // only need to return a res.status if there is possible bleed thru
 
+
 router.patch("/:productId", (req, res, next) => {
     const id = req.params.productId;
+    // const updateOps = {};
+    // let updateOps = req.body[0]
+
     const updateOps = {};
     for (const ops of req.body) {
         updateOps[ops.propName] = ops.value; // allows for diff types of patch requests
     }
-    Product.update({ _id: id }, { $set: updateOps }) // $set, compare key value pairs and how to update
+    // for (const key of Object.keys(req.body)) {
+
+    //     updateOps[key] = req.body[key];
+    // }
+    // for (const key in req.body) {
+
+    //     updateOps[key] = req.body[key];
+    // }
+    console.log(updateOps);
+    console.log(id);
+
+    Product.findOneAndUpdate({ _id: id }, { $set: updateOps }) // $set, compare key value pairs and how to update
         .exec()
         .then(result => {
             console.log(result);
-            res.status(200).json(result);
+            res.status(200).json({
+                message: 'Product updated',
+                request: {
+                    type: 'GET',
+                    message: "yeah, this doesn't work",
+                    url: 'http://localhost:3000/products/' + id
+                }
+            });
         })
         .catch(err => {
             console.log(err);
